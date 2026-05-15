@@ -1,0 +1,113 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+body{
+    background-color: rgb(214, 211, 204);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+}
+.Main{
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba( 0,0,0,0.09);
+
+
+}
+.logo{
+    width: 40%;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    padding: 40px;
+
+}
+.card{
+    width: 60%;
+    background:rgba(16, 13, 209, 0.37);
+    padding: 40px;
+
+}
+.card h2{
+    color: white;
+}
+.form -group{
+    margin: bottom 18px; ;
+}
+input{
+    width: 100%;
+    padding: 12px;
+    margin: top 8px ;
+    border-radius: 8px;
+    border: 1px solid oklch(96.739% 0.02107 101.042);
+    font-size: 16px;
+
+}
+input:focus{
+outline: none;
+border-color: white;
+}
+.btn-primary{
+    background:rgb(41, 11, 212);
+    color: white;
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: 0.3s ease;
+    
+}
+.btn-register{
+      background:white ;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: 0.3s ease;
+    outline: none;
+    outline: none;
+	border: 0px;
+	margin-top: 8px;
+	text-decoration: none;
+}
+.btn-forgot{
+	background: white;
+	color:white;
+	padding: 12px;
+	width: 100%;
+	cursor: pointer;
+	border-radius: 8px;
+	font-size: 16px;
+	transition: 0.3s ease;
+	outline: none;
+	border: 0px;
+	margin-top: 8px;
+	text-decoration: none;
+}
+@media(max-width:768px){
+    .Main{
+        flex-direction: column;
+    }
+    .logo{
+        width: 100%;
+        padding: 30px;
+    }
+    .card{
+        width: 100;
+        padding: 25px;
+    }
+}
