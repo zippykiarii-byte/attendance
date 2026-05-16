@@ -89,12 +89,13 @@ let btnAddcourse = document.getElementById("btnaddcourse");
       // clear inputs
       document.getElementById("txtcoursename").value = "";
       document.getElementById("txtcoursecode").value = "";
-      document.getElementById("btnaddcourse").innerText = "Add new Course";
-      document.getElementById("txtlecturer").innerText = "Add new lecturer";
-      document.getElementById("txtvenue").innerText = "Add new venue";
+      document.getElementById("courseStatus").value = "active";
+      document.getElementById("lecturerSelect").selectedIndex = 0;
+      document.getElementById("venueSelect").selectedIndex = 0;
+      document.getElementById("btnaddcourse").innerText = "Add Course";
 
       // reload courses table
-      loadActiveCourses();
+      loadCourses();
     })
 
     .catch((error) => {
@@ -102,29 +103,42 @@ let btnAddcourse = document.getElementById("btnaddcourse");
     });
   });
 
-// Load and display active courses
-function loadActiveCourses() {
-  let tablebody = document.querySelector("table tbody");
-  
+// Load and display active and inactive courses
+function loadCourses() {
+  let activeBody = document.getElementById("tablebodyactive");
+  let inactiveBody = document.getElementById("tablebodyinactive");
+
   firebase.database().ref("courses").once("value", function(snapshot) {
-    tablebody.innerHTML = "";
-    
+    activeBody.innerHTML = "";
+    inactiveBody.innerHTML = "";
+
     snapshot.forEach(function(childSnapshot) {
       let data = childSnapshot.val();
       let key = childSnapshot.key;
-      
-      if(data.Status == "active") {
-        tablebody.innerHTML += `
+
+      if (data.Status == "active") {
+        activeBody.innerHTML += `
           <tr>
             <td>${data.CourseCode}</td>
             <td>${data.CourseName}</td>
             <td>${data.Venue}</td>
             <td>${data.Lecturer}</td>
-            <td>${data.Action}</td>
-
             <td>
               <button class="btn btngreen">Open Session</button>
               <button class="btn btnred">Close course</button>
+              <button class="btn btnblue">View attendance</button>
+            </td>
+          </tr>
+        `;
+      } else if (data.Status == "inactive") {
+        inactiveBody.innerHTML += `
+          <tr>
+            <td>${data.CourseCode}</td>
+            <td>${data.CourseName}</td>
+            <td>${data.Venue}</td>
+            <td>${data.Lecturer}</td>
+            <td>
+              <button class="btn btngreen">Reopen course</button>
               <button class="btn btnblue">View attendance</button>
             </td>
           </tr>
@@ -135,7 +149,7 @@ function loadActiveCourses() {
 }
 
 // Load courses when page loads
-loadActiveCourses();
+loadCourses();
 
 //count total courses
 let lbcourses = document.getElementById('lbtotalcourses')
@@ -161,20 +175,8 @@ firebase.database().ref("courses").once("value",function(snapshot){
 })
 
 //count total inactive courses
-let lbapprovals = document.getElementById('lbapprovals')
-firebase.database().ref("userDetails").once("value",function(snapshot){
-    let total= 0
-    snapshot.forEach(function(childSnapshot){
-        let data = childSnapshot.val()
-        if(data.Status == "inactive"){
-            total ++
-        }
-    })
-    lbapprovals.innerHTML = total
-})
-//count total inactive courses
 let lbinactive = document.getElementById('lbinactivecourses')
-firebase.database().ref("userDetails").once("value").then(function(snapshot){
+firebase.database().ref("courses").once("value").then(function(snapshot){
     let total= 0
     snapshot.forEach(function(childSnapshot){
         let data = childSnapshot.val()

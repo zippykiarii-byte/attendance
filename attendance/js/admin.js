@@ -54,7 +54,7 @@ function loaddata() {
       let data = childSnapshot.val()
       let key = childSnapshot.key
 
-      if (data.Status == "Active" && data.Role == "Admin") {
+      if (data.Status == "active" && data.Role == "Admin") {
         tablebody.innerHTML += `
                     <tr>
                      <td>${data.Email}</td>
@@ -99,7 +99,7 @@ function loaddatainactive() {
       let data = childSnapshot.val()
       let key = childSnapshot.key
 
-      if (data.Status == "Inactive" && data.Role == "Admin") {
+      if (data.Status == "inactive" && data.Role == "Admin") {
         tablebody.innerHTML += `
                     <tr>
                      <td>${data.Email}</td>
@@ -134,8 +134,24 @@ function activateadmin(adminid) {
     })
 }
 
-//count active admins
+//count total admins
 let lbtotaladmins = document.getElementById('lbtotaladmins')
+firebase.database().ref("userDetails").once("value").then(function(snapshot){
+    let total= 0
+    snapshot.forEach(function(childSnapshot){
+        let data = childSnapshot.val()
+        if(data.Role == "Admin"){
+            total ++
+        }
+    })
+    lbtotaladmins.innerHTML = total
+}).catch(function(error){
+    console.log(error)
+    lbtotaladmins.innerHTML = '0'
+})
+
+//count active admins
+let lbtotalactiveadmins = document.getElementById('lbtotalactiveadmins')
 firebase.database().ref("userDetails").once("value").then(function(snapshot){
     let total= 0
     snapshot.forEach(function(childSnapshot){
@@ -144,12 +160,14 @@ firebase.database().ref("userDetails").once("value").then(function(snapshot){
             total ++
         }
     })
-    lbtotaladmins.innerHTML = total
+    lbtotalactiveadmins.innerHTML = total
+}).catch(function(error){
+    console.log(error)
+    lbtotalactiveadmins.innerHTML = '0'
 })
 
-
 //count inactive admins
-let lbapprovals = document.getElementById('lbapprovals')
+let lbtotalinactiveadmins = document.getElementById('lbtotalinactiveadmins')
 firebase.database().ref("userDetails").once("value").then(function(snapshot){
     let total= 0
     snapshot.forEach(function(childSnapshot){
@@ -158,5 +176,24 @@ firebase.database().ref("userDetails").once("value").then(function(snapshot){
             total ++
         }
     })
-    lbapprovals.innerHTML = total
+    lbtotalinactiveadmins.innerHTML = total
+}).catch(function(error){
+    console.log(error)
+    lbtotalinactiveadmins.innerHTML = '0'
+})    
+
+//count pending approvals (inactive admins)
+let lbpendingapprovals = document.getElementById('lbpendingapprovals')
+firebase.database().ref("userDetails").once("value").then(function(snapshot){
+    let total= 0
+    snapshot.forEach(function(childSnapshot){
+        let data = childSnapshot.val()
+        if(data.Role == "Admin" && data.Status == "inactive"){
+            total ++
+        }
+    })
+    lbpendingapprovals.innerHTML = total
+}).catch(function(error){
+    console.log(error)
+    lbpendingapprovals.innerHTML = '0'
 })    

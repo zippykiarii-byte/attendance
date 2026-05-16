@@ -66,46 +66,72 @@ let btnAdd = document.getElementById("btnaddcourse");
   });
 
 function loaddata(){
-  // Load venue to the table
-   // table body
-  let tableBody = document.getElementById("tablebody");
-  // load data
+  let activeBody = document.getElementById("tablebodyactive");
+  let inactiveBody = document.getElementById("tablebodyinactive");
+
   firebase.database().ref("GpsVenus").on("value", (snapshot) => {
-    // clear table first
-    tableBody.innerHTML = "";
+    activeBody.innerHTML = "";
+    inactiveBody.innerHTML = "";
+
     snapshot.forEach((childSnapshot) => {
       let data = childSnapshot.val();
-      let key = childSnapshot.key; // venueCode key help in modification
-      // only active venues
-      if(data.Status == "active"){
-        tableBody.innerHTML += `
+      let key = childSnapshot.key;
+
+      if (data.Status == "active") {
+        activeBody.innerHTML += `
           <tr>
             <td>${data.VenueCode}</td>
             <td>${data.VenueName}</td>
             <td>${data.Latitude}</td>
             <td>${data.Longitude}</td>
-
             <td>
               <button class="btn btnred" onclick="closeVenue('${key}')">
                 Close GPS Venue
               </button>
-
               <button class="btn btnblue" onclick="editVenue('${key}')">
                 Edit GPS
               </button>
             </td>
-
           </tr>
-
+        `;
+      } else if (data.Status == "inactive") {
+        inactiveBody.innerHTML += `
+          <tr>
+            <td>${data.VenueCode}</td>
+            <td>${data.VenueName}</td>
+            <td>${data.Latitude}</td>
+            <td>${data.Longitude}</td>
+            <td>
+              <button class="btn btngreen" onclick="openVenue('${key}')">
+                Open GPS Venue
+              </button>
+              <button class="btn btnblue" onclick="editVenue('${key}')">
+                Edit GPS
+              </button>
+            </td>
+          </tr>
         `;
       }
-
     });
-
   });
 }
 
 loaddata();
+
+function openVenue(venueCode) {
+  let confirmOpen = confirm("Are you sure you want to reopen this GPS venue?");
+  if (!confirmOpen) return;
+
+  firebase.database().ref("GpsVenus/" + venueCode).update({
+    Status: "active"
+  })
+  .then(() => {
+    alert("GPS Venue reopened successfully");
+  })
+  .catch((error) => {
+    alert(error.message);
+  });
+}
 
 
  // function to close venue (set inactive)
